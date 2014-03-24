@@ -844,23 +844,17 @@ THE SOFTWARE.
 		    var newDate;
 		    if (direction == "add") {
 		        newDate = pMoment(picker.date);
-		        if (newDate.hours() == 23) newDate.add(amount, unit);
 		        newDate.add(amount, unit);
 		    }
 		    else {
 		        newDate = pMoment(picker.date).subtract(amount, unit);
 		    }
-		    if (isInDisableDates(pMoment(newDate.subtract(amount, unit))) || isInDisableDates(newDate)) {
+		    if (isInDisableDates(newDate)) {
 		        notifyError(newDate.format(picker.format));
 		        return;
 		    }
 
-		    if (direction == "add") {
-		        picker.date.add(amount, unit);
-		    }
-		    else {
-		        picker.date.subtract(amount, unit);
-		    }
+                    picker.date = newDate;
 		    picker.unset = false;
 		},
 
