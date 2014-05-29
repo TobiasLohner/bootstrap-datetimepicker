@@ -397,7 +397,7 @@ THE SOFTWARE.
                     picker.date.date() == prevMonth.date()) {
                     clsName += ' active';
                 }
-                if (isInDisableDates(prevMonth) || !isInEnableDates(prevMonth)) {
+                if (isInDisableDates(prevMonth, 'day') || !isInEnableDates(prevMonth)) {
                     clsName += ' disabled';
                 }
                 if (picker.options.showToday === true) {
@@ -858,8 +858,16 @@ THE SOFTWARE.
 		    picker.unset = false;
 		},
 
-        isInDisableDates = function (date) {
-            if (date.isAfter(picker.options.maxDate) || date.isBefore(picker.options.minDate)) return true;
+        isInDisableDates = function (date, timeUnit) {
+            var maxDate = picker.options.maxDate;
+            var minDate = picker.options.minDate;
+
+            if(timeUnit) {
+                maxDate = pMoment(maxDate).endOf(timeUnit);
+                minDate = pMoment(minDate).startOf(timeUnit);
+            }
+
+            if (date.isAfter(maxDate) || date.isBefore(minDate)) return true;
             if (picker.options.disabledDates === false) {
                 return false;
             }
