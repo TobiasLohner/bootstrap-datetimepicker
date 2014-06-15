@@ -1071,6 +1071,7 @@ THE SOFTWARE.
               } else {
                 picker.widget.show();
                 picker.widget.addClass('picker-open');
+                actions.showPicker.call(picker);
                 fillDate(true);
                 fillTime(true);
               }
