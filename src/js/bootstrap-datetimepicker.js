@@ -184,7 +184,6 @@ THE SOFTWARE.
               picker.setMaxDate(picker.options.maxDate);
               fillDow();
               fillMonths();
-              fillHours();
               fillMinutes();
               fillSeconds();
               update();
@@ -462,12 +461,15 @@ THE SOFTWARE.
             fillHours = function() {
               var table = picker.widget.find('.timepicker .timepicker-hours table'), html = '', current, i, j;
               table.parent().hide();
+              var current_date = pMoment(picker.date);
               if (picker.use24hours) {
                 current = 0;
                 for (i = 0; i < 6; i += 1) {
                   html += '<tr>';
                   for (j = 0; j < 4; j += 1) {
-                    html += '<td class="hour">' + padLeft(current.toString()) + '</td>';
+                    current_date.hour(current);
+                    var disable = isInDisableDates(current_date) || !isInEnableDates(current_date) ? 'disabled' : '';
+                    html += '<td class="hour ' + disable + '">' + padLeft(current.toString()) + '</td>';
                     current++;
                   }
                   html += '</tr>';
@@ -478,7 +480,9 @@ THE SOFTWARE.
                 for (i = 0; i < 3; i += 1) {
                   html += '<tr>';
                   for (j = 0; j < 4; j += 1) {
-                    html += '<td class="hour">' + padLeft(current.toString()) + '</td>';
+                    current_date.hour(current);
+                    var disable = isInDisableDates(current_date) && !isInEnableDates(current_date) ? 'disabled' : '';
+                    html += '<td class="hour ' + disable + '">' + padLeft(current.toString()) + '</td>';
                     current++;
                   }
                   html += '</tr>';
@@ -661,6 +665,7 @@ THE SOFTWARE.
               },
 
               showHours: function() {
+                fillHours();
                 picker.widget.find('.timepicker .timepicker-picker').hide();
                 picker.widget.find('.timepicker .timepicker-hours').show();
               },
@@ -676,7 +681,7 @@ THE SOFTWARE.
               },
 
               selectHour: function(e) {
-                if ($(e.target).is('.hour')) {
+                if ($(e.target).is('.hour') && !$(e.target).is('.disabled')) {
                   var period = picker.widget.find('.timepicker [data-action=togglePeriod]').text(), hour = parseInt($(e.target).text(), 10);
                   if (period == 'PM') hour += 12;
                   picker.date.hours(hour);
