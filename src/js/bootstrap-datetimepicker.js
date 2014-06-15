@@ -352,8 +352,8 @@ THE SOFTWARE.
             picker.widget.find('.datepicker-months td').append(html);
         },
 
-        fillDate = function () {
-            if(!picker.options.pickDate) return;
+        fillDate = function (force) {
+            if (!picker.options.pickDate || (!picker.widget.hasClass("picker-open") && !force)) return;
             var year = picker.viewDate.year(),
                 month = picker.viewDate.month(),
                 startYear = picker.options.minDate.year(),
@@ -520,8 +520,9 @@ THE SOFTWARE.
             table.html(html);
         },
 
-        fillTime = function () {
-            if (!picker.date) return;
+        fillTime = function (force) {
+            if (!picker.date || (!picker.widget.hasClass("picker-open") && !force)) return;
+
             var timeComponents = picker.widget.find('.timepicker span[data-time-component]'),
             hour = picker.date.hours(),
             period = 'AM';
@@ -1053,6 +1054,8 @@ THE SOFTWARE.
             else {
             	picker.widget.show();
             	picker.widget.addClass("picker-open");
+                fillDate(true);
+                fillTime(true);
             }
             picker.height = picker.component ? picker.component.outerHeight() : picker.element.outerHeight();
             place();
