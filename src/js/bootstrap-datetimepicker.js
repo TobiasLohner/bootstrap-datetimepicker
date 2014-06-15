@@ -459,34 +459,29 @@ THE SOFTWARE.
             },
 
             fillHours = function() {
-              var table = picker.widget.find('.timepicker .timepicker-hours table'), html = '', current, i, j;
               table.parent().hide();
+              var table = picker.widget.find('.timepicker .timepicker-hours table'), html = '';
               var current_date = pMoment(picker.date);
+
               if (picker.use24hours) {
-                current = 0;
-                for (i = 0; i < 6; i += 1) {
-                  html += '<tr>';
-                  for (j = 0; j < 4; j += 1) {
-                    current_date.hour(current);
-                    var disable = isInDisableDates(current_date) || !isInEnableDates(current_date) ? 'disabled' : '';
-                    html += '<td class="hour ' + disable + '">' + padLeft(current.toString()) + '</td>';
-                    current++;
-                  }
-                  html += '</tr>';
-                }
+                var cols = 4,
+                    rows = 6,
+                    current = 0;
+              } else {
+                var cols = 4,
+                    rows = 3,
+                    current = 1;
               }
-              else {
-                current = 1;
-                for (i = 0; i < 3; i += 1) {
-                  html += '<tr>';
-                  for (j = 0; j < 4; j += 1) {
-                    current_date.hour(current);
-                    var disable = isInDisableDates(current_date) && !isInEnableDates(current_date) ? 'disabled' : '';
-                    html += '<td class="hour ' + disable + '">' + padLeft(current.toString()) + '</td>';
-                    current++;
-                  }
-                  html += '</tr>';
+
+              for (var i = 0; i < rows; i += 1) {
+                html += '<tr>';
+                for (var j = 0; j < cols; j += 1) {
+                  current_date.hour(current);
+                  var disable = isInDisableDates(current_date) || !isInEnableDates(current_date) ? 'disabled' : '';
+                  html += '<td class="hour ' + disable + '">' + padLeft(current.toString()) + '</td>';
+                  current++;
                 }
+                html += '</tr>';
               }
               table.html(html);
             },
