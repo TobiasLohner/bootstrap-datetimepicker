@@ -184,7 +184,6 @@ THE SOFTWARE.
               picker.setMaxDate(picker.options.maxDate);
               fillDow();
               fillMonths();
-              fillMinutes();
               fillSeconds();
               update();
               showMode();
@@ -487,12 +486,16 @@ THE SOFTWARE.
 
             fillMinutes = function() {
               var table = picker.widget.find('.timepicker .timepicker-minutes table'), html = '', current = 0, i, j, step = picker.options.minuteStepping;
+              var current_date = pMoment(picker.date);
+
               if (step == 1) step = 5;
               for (i = 0; i < Math.ceil(60 / step / 4); i++) {
                 html += '<tr>';
                 for (j = 0; j < 4; j += 1) {
                   if (current < 60) {
-                    html += '<td class="minute">' + padLeft(current.toString()) + '</td>';
+                    current_date.minute(current);
+                    var disable = isInDisableDates(current_date) || !isInEnableDates(current_date) ? 'disabled' : '';
+                    html += '<td class="minute ' + disable + '">' + padLeft(current.toString()) + '</td>';
                     current += step;
                   } else {
                     html += '<td></td>';
@@ -663,6 +666,7 @@ THE SOFTWARE.
               },
 
               showMinutes: function() {
+                fillMinutes();
                 picker.widget.find('.timepicker .timepicker-picker').hide();
                 picker.widget.find('.timepicker .timepicker-minutes').show();
               },
@@ -682,7 +686,7 @@ THE SOFTWARE.
               },
 
               selectMinute: function(e) {
-                if ($(e.target).is('.minute')) {
+                if ($(e.target).is('.minute') && !$(e.target).is('.disabled')) {
                   picker.date.minutes(parseInt($(e.target).text(), 10));
                   actions.showPicker.call(picker);
                 }
