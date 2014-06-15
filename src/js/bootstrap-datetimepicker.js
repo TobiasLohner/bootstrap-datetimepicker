@@ -184,7 +184,6 @@ THE SOFTWARE.
               picker.setMaxDate(picker.options.maxDate);
               fillDow();
               fillMonths();
-              fillSeconds();
               update();
               showMode();
               attachDatePickerEvents();
@@ -508,10 +507,14 @@ THE SOFTWARE.
 
             fillSeconds = function() {
               var table = picker.widget.find('.timepicker .timepicker-seconds table'), html = '', current = 0, i, j;
+              var current_date = pMoment(picker.date);
+
               for (i = 0; i < 3; i++) {
                 html += '<tr>';
                 for (j = 0; j < 4; j += 1) {
-                  html += '<td class="second">' + padLeft(current.toString()) + '</td>';
+                  current_date.seconds(current);
+                  var disable = isInDisableDates(current_date) || !isInEnableDates(current_date) ? 'disabled' : '';
+                  html += '<td class="second ' + disable + '">' + padLeft(current.toString()) + '</td>';
                   current += 5;
                 }
                 html += '</tr>';
@@ -672,6 +675,7 @@ THE SOFTWARE.
               },
 
               showSeconds: function() {
+                fillSeconds();
                 picker.widget.find('.timepicker .timepicker-picker').hide();
                 picker.widget.find('.timepicker .timepicker-seconds').show();
               },
@@ -693,7 +697,7 @@ THE SOFTWARE.
               },
 
               selectSecond: function(e) {
-                if ($(e.target).is('.second')) {
+                if ($(e.target).is('.second') && !$(e.target).is('.disabled')) {
                   picker.date.seconds(parseInt($(e.target).text(), 10));
                   actions.showPicker.call(picker);
                 }
