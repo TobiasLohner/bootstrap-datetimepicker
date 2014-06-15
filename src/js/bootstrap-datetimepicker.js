@@ -391,7 +391,7 @@ THE SOFTWARE.
                     picker.date.date() == prevMonth.date()) {
                   clsName += ' active';
                 }
-                if (isInDisableDates(prevMonth, 'day') || !isInEnableDates(prevMonth)) {
+                if (isInDisableDates(prevMonth, 'day')) {
                   clsName += ' disabled';
                 }
                 if (picker.options.showToday === true) {
@@ -474,7 +474,7 @@ THE SOFTWARE.
                 html += '<tr>';
                 for (var j = 0; j < cols; j += 1) {
                   current_date.hour(current);
-                  var disable = isInDisableDates(current_date) || !isInEnableDates(current_date) ? 'disabled' : '';
+                  var disable = isInDisableDates(current_date) ? 'disabled' : '';
                   html += '<td class="hour ' + disable + '">' + padLeft(current.toString()) + '</td>';
                   current++;
                 }
@@ -493,7 +493,7 @@ THE SOFTWARE.
                 for (j = 0; j < 4; j += 1) {
                   if (current < 60) {
                     current_date.minute(current);
-                    var disable = isInDisableDates(current_date) || !isInEnableDates(current_date) ? 'disabled' : '';
+                    var disable = isInDisableDates(current_date) ? 'disabled' : '';
                     html += '<td class="minute ' + disable + '">' + padLeft(current.toString()) + '</td>';
                     current += step;
                   } else {
@@ -513,7 +513,7 @@ THE SOFTWARE.
                 html += '<tr>';
                 for (j = 0; j < 4; j += 1) {
                   current_date.seconds(current);
-                  var disable = isInDisableDates(current_date) || !isInEnableDates(current_date) ? 'disabled' : '';
+                  var disable = isInDisableDates(current_date) ? 'disabled' : '';
                   html += '<td class="second ' + disable + '">' + padLeft(current.toString()) + '</td>';
                   current += 5;
                 }
@@ -726,7 +726,7 @@ THE SOFTWARE.
 
             change = function(e) {
               var input = $(e.target), oldDate = pMoment(picker.date), newDate = pMoment(input.val(), picker.format, picker.options.useStrict);
-              if (newDate.isValid() && !isInDisableDates(newDate) && isInEnableDates(newDate)) {
+              if (newDate.isValid() && !isInDisableDates(newDate)) {
                 update();
                 picker.setValue(newDate);
                 notifyChange(oldDate, e.type);
@@ -880,17 +880,17 @@ THE SOFTWARE.
               }
 
               if (date.isAfter(maxDate) || date.isBefore(minDate)) return true;
-              if (picker.options.disabledDates === false) {
-                return false;
-              }
-              return picker.options.disabledDates[pMoment(date).format('YYYY-MM-DD')] === true;
-            },
 
-            isInEnableDates = function(date) {
-              if (picker.options.enabledDates === false) {
-                return true;
+              var disabled = false;
+              if (picker.options.disabledDates) {
+                disabled |= picker.options.disabledDates[pMoment(date).format('YYYY-MM-DD')] === true;
               }
-              return picker.options.enabledDates[pMoment(date).format('YYYY-MM-DD')] === true;
+
+              if (picker.options.enabledDates) {
+                disabled |= !picker.options.enabledDates[pMoment(date).format('YYYY-MM-DD')] === true;
+              }
+
+              return disabled;
             },
 
             indexGivenDates = function(givenDatesArray) {
