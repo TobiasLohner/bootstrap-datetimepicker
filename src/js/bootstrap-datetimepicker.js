@@ -459,7 +459,6 @@ THE SOFTWARE.
             },
 
             fillHours = function() {
-              table.parent().hide();
               var table = picker.widget.find('.timepicker .timepicker-hours table'), html = '';
               var current_date = pMoment(picker.date);
 
@@ -488,7 +487,6 @@ THE SOFTWARE.
 
             fillMinutes = function() {
               var table = picker.widget.find('.timepicker .timepicker-minutes table'), html = '', current = 0, i, j, step = picker.options.minuteStepping;
-              table.parent().hide();
               if (step == 1) step = 5;
               for (i = 0; i < Math.ceil(60 / step / 4); i++) {
                 html += '<tr>';
@@ -507,7 +505,6 @@ THE SOFTWARE.
 
             fillSeconds = function() {
               var table = picker.widget.find('.timepicker .timepicker-seconds table'), html = '', current = 0, i, j;
-              table.parent().hide();
               for (i = 0; i < 3; i++) {
                 html += '<tr>';
                 for (j = 0; j < 4; j += 1) {
@@ -1026,14 +1023,14 @@ THE SOFTWARE.
                           '</tr>' +
                       '</table>' +
                   '</div>' +
-                  '<div class="timepicker-hours" data-action="selectHour">' +
+                  '<div class="timepicker-hours" style="display: none;" data-action="selectHour">' +
                       '<table class="table-condensed"></table>' +
                   '</div>' +
-                  '<div class="timepicker-minutes" data-action="selectMinute">' +
+                  '<div class="timepicker-minutes" style="display: none;" data-action="selectMinute">' +
                       '<table class="table-condensed"></table>' +
                   '</div>' +
                   (picker.options.useSeconds ?
-                      '<div class="timepicker-seconds" data-action="selectSecond"><table class="table-condensed"></table></div>' : '')
+                      '<div class="timepicker-seconds" style="display: none;" data-action="selectSecond"><table class="table-condensed"></table></div>' : '')
               );
             };
 
