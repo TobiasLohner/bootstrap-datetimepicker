@@ -97,7 +97,7 @@ THE SOFTWARE.
                 throw new Error('Must choose at least one picker');
 
               picker.id = dpgId++;
-              pMoment.lang(picker.options.language);
+              pMoment.locale(picker.options.language);
               picker.date = pMoment();
               picker.unset = false;
               picker.isInput = picker.element.is('input');
@@ -113,14 +113,14 @@ THE SOFTWARE.
               }
               picker.format = picker.options.format;
 
-              longDateFormat = pMoment()._lang._longDateFormat;
+              longDateFormat = pMoment().localeData().longDateFormat;
 
               if (!picker.format) {
-                picker.format = (picker.options.pickDate ? longDateFormat.L : '');
+                picker.format = (picker.options.pickDate ? longDateFormat('L') : '');
                 if (picker.options.pickDate && picker.options.pickTime) picker.format += ' ';
-                picker.format += (picker.options.pickTime ? longDateFormat.LT : '');
+                picker.format += (picker.options.pickTime ? longDateFormat('LT') : '');
                 if (picker.options.useSeconds) {
-                  if (~longDateFormat.LT.indexOf(' A')) {
+                  if (~longDateFormat('LT').indexOf(' A')) {
                     picker.format = picker.format.split(' A')[0] + ':ss A';
                   } else {
                     picker.format += ':ss';
@@ -322,7 +322,7 @@ THE SOFTWARE.
 
             fillDow = function() {
               var html = $(document.createElement('tr')), weekdaysMin = pMoment.weekdaysMin(), i;
-              if (pMoment()._lang._week.dow == 0) { // starts on Sunday
+              if (pMoment().localeData().firstDayOfWeek() == 0) { // starts on Sunday
                 for (i = 0; i < 7; i++) {
                   html.append('<th class="dow">' + weekdaysMin[i] + '</th>');
                 }
